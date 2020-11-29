@@ -2,6 +2,8 @@
 ##
 # General asset build script
 ##
+set -e
+
 [[ -z "$WDIR" ]] && { echo "WDIR is empty using bonsai/" ; WDIR="bonsai/"; }
 
 [[ -z "$GITHUB_TOKEN" ]] && { echo "GITHUB_TOKEN is empty" ; exit 1; }
@@ -39,7 +41,7 @@ if [ -d dist ]; then
       echo "upload $filename"
       ${WDIR}/github-release-upload.sh github_api_token=$GITHUB_TOKEN repo_slug="$GIT_OWNER_REPO" tag="${GITHUB_RELEASE_TAG}" filename="$filename"
     fi
-  done 
+  done
   file=$(basename "${files[0]}")
   IFS=_ read -r package leftover <<< "$file"
   unset leftover
@@ -59,10 +61,9 @@ if [ -d dist ]; then
     fi
   fi
 
-  # Generate github release edit event 
-  ${WDIR}/github-release-event.sh github_api_token=$GITHUB_TOKEN repo_slug="$GIT_OWNER_REPO" tag="${GITHUB_RELEASE_TAG}" 
+  # Generate github release edit event
+  ${WDIR}/github-release-event.sh github_api_token=$GITHUB_TOKEN repo_slug="$GIT_OWNER_REPO" tag="${GITHUB_RELEASE_TAG}"
 
 else
   echo "error dist directory is missing"
 fi
-
